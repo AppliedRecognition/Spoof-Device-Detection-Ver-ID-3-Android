@@ -1,0 +1,1 @@
+sourceset_dependencies = '{":spoof-detection-core:dokkaHtmlPartial/debug":[],":spoof-detection-core:dokkaHtmlPartial/main":[],":spoof-detection-core:dokkaHtmlPartial/release":[],":spoof-device-detection:dokkaHtmlPartial/debug":[],":spoof-device-detection:dokkaHtmlPartial/main":[],":spoof-device-detection:dokkaHtmlPartial/release":[]}'

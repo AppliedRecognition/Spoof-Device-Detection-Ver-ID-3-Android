@@ -1,0 +1,7 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:spoof-detection-core
+com.appliedrec.verid3.spoofdevicedetection.core
+module:spoof-device-detection
+com.appliedrec.verid3.spoofdevicedetection.cloud
