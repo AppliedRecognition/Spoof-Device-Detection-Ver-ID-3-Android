@@ -6,7 +6,7 @@ import com.appliedrec.verid3.common.SpoofDetection
 
 abstract class SpoofDetectionCore : SpoofDetection {
 
-    var confidenceThreshold: Float = 0.5f
+    override var confidenceThreshold: Float = 0.5f
 
     override suspend fun detectSpoofInImage(image: IImage, regionOfInterest: RectF?): Float {
         val spoofDevices = detectSpoofDevicesInImage(image)
