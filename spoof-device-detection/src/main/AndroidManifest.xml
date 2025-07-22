@@ -1,4 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.appliedrec.verid3.spoofdevicedetection.cloud">
     <uses-permission android:name="android.permission.INTERNET" />
+    <application>
+        <meta-data
+            android:name="com.appliedrec.spoofdevicedetection.serverurl"
+            android:value="https://j62fj0da16.execute-api.us-east-1.amazonaws.com/Prod/detect_spoof_devices" />
+        <meta-data
+            android:name="com.appliedrec.spoofdevicedetection.apikey"
+            android:value="BK1aJ1vpb08InLtOsdmhL6ZiRDJtq0H89nPqVuzB" />
+    </application>
 </manifest>
