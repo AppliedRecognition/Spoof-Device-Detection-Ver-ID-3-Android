@@ -16,6 +16,7 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        mavenLocal()
         maven {
             url = uri("https://maven.pkg.github.com/AppliedRecognition/Ver-ID-Releases-Android")
             credentials {
@@ -26,6 +27,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Spoof detection"
+rootProject.name = "Spoof device detection"
 include(":spoof-device-detection")
 include(":spoof-detection-core")

@@ -1,9 +1,13 @@
 package com.appliedrec.verid3.spoofdevicedetection.cloud
 
+import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.PointF
+import androidx.core.graphics.createBitmap
+import androidx.core.graphics.scale
 import com.appliedrec.verid3.common.IImage
 import com.appliedrec.verid3.common.serialization.toBitmap
 import com.appliedrec.verid3.spoofdevicedetection.core.DetectedSpoof
@@ -11,6 +15,7 @@ import com.appliedrec.verid3.spoofdevicedetection.core.SpoofDetectionCore
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -21,7 +26,43 @@ import java.io.IOException
 import kotlin.math.max
 import kotlin.math.roundToInt
 
+/**
+ * Constructor
+ *
+ * @property apiKey API key
+ * @property url Server URL
+ */
 class SpoofDeviceDetection(val apiKey: String, val url: HttpUrl) : SpoofDetectionCore() {
+
+    /**
+     * Constructor that uses API key and server URL
+     *
+     * @param apiKey API key
+     * @param url Server URL
+     */
+    constructor(apiKey: String, url: String) : this(apiKey, url.toHttpUrl())
+
+    /**
+     * Constructor that uses API key and server URL from Android manifest
+     *
+     * @param context Application context
+     */
+    constructor(context: Context) : this(
+        resolveMetaData(context, "com.appliedrec.spoofdevicedetection.apikey"),
+        resolveMetaData(context, "com.appliedrec.spoofdevicedetection.serverurl")
+    )
+
+    companion object {
+        private fun resolveMetaData(context: Context, key: String): String {
+            val appInfo = context.packageManager
+                .getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
+            val value = appInfo.metaData?.getString(key)
+            require(!value.isNullOrEmpty()) {
+                "Missing or empty meta-data for key: $key"
+            }
+            return value
+        }
+    }
 
     internal val inputImageSize: Int = 640
     private val httpClient = OkHttpClient()
@@ -36,7 +77,7 @@ class SpoofDeviceDetection(val apiKey: String, val url: HttpUrl) : SpoofDetectio
             if (!response.isSuccessful) {
                 throw IOException("Unexpected HTTP code ${response.code}")
             }
-            response.body?.string() ?: throw IllegalStateException("Response body is null")
+            response.body.string()
         }
         return parseResponseBody(body, image)
     }
@@ -64,13 +105,6 @@ class SpoofDeviceDetection(val apiKey: String, val url: HttpUrl) : SpoofDetectio
             }
     }
 
-    private fun bitmapToPng(bitmap: Bitmap): ByteArray {
-        return ByteArrayOutputStream().use { outputStream ->
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-            outputStream.toByteArray()
-        }
-    }
-
     private fun bitmapToJpeg(bitmap: Bitmap): ByteArray {
         return ByteArrayOutputStream().use { outputStream ->
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
@@ -84,8 +118,8 @@ class SpoofDeviceDetection(val apiKey: String, val url: HttpUrl) : SpoofDetectio
         val scale = inputImageSize / max(inWidth.toFloat(), inHeight.toFloat())
         val outWidth = (inWidth * scale).roundToInt()
         val outHeight = (inHeight * scale).roundToInt()
-        val scaledBitmap = Bitmap.createScaledBitmap(input, outWidth, outHeight, true)
-        val output = Bitmap.createBitmap(inputImageSize, inputImageSize, Bitmap.Config.ARGB_8888)
+        val scaledBitmap = input.scale(outWidth, outHeight)
+        val output = createBitmap(inputImageSize, inputImageSize)
         val canvas = Canvas(output)
         canvas.drawColor(Color.BLACK)
         val left = ((inputImageSize - outWidth) / 2f)

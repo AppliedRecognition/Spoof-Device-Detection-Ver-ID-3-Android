@@ -1,4 +1,5 @@
 import org.jetbrains.dokka.gradle.DokkaTask
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.library)
@@ -9,17 +10,25 @@ plugins {
     signing
 }
 
+
 version = "1.0.0"
 
 android {
     namespace = "com.appliedrec.verid3.spoofdevicedetection.core"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 26
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+    }
+
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 
     buildTypes {
@@ -35,8 +44,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    kotlin {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
     }
 }
 
@@ -47,6 +58,7 @@ dependencies {
     implementation(libs.kotlin.serialization)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.okhttp.bom))
     androidTestImplementation(libs.okhttp.mockwebserver)
 }
 
@@ -98,5 +110,4 @@ signing {
 tasks.withType<DokkaTask>().configureEach {
     moduleName.set("Spoof device detection core")
     moduleVersion.set(project.version.toString())
-//    outputDirectory.set(file("../docs"))
 }
