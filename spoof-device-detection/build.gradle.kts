@@ -66,7 +66,7 @@ publishing {
     publications {
         create<MavenPublication>("release") {
             groupId = "com.appliedrec"
-            artifactId = "spoof-device-detection"
+            artifactId = "spoof-device-detection-cloud"
             afterEvaluate {
                 from(components["release"])
             }
