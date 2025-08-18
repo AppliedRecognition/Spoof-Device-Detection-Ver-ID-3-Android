@@ -2,36 +2,20 @@
 
 Android library that detects devices like screens that may be used to spoof face detection.
 
-The library implements the [`SpoofDetection`]() interface from [VerIDCommonTypes](), making it easy to plug in to the Ver-ID face capture SDK.
+The library implements the [`SpoofDetection`](https://github.com/AppliedRecognition/Ver-ID-Common-Types-Android/blob/main/lib/src/main/java/com/appliedrec/verid3/common/SpoofDetection.kt) interface from [VerIDCommonTypes](https://github.com/AppliedRecognition/Ver-ID-Common-Types-Android/tree/main), making it easy to plug in to the Ver-ID face capture SDK.
 
 ## Installation
 
-1. Add your GitHub credentials in your **gradle.properties** file:
+Add the spoof detection library in your module's **build.gradle.kts** file:
 
-    ```
-    gpr.user=<user name>
-    gpr.token=<personal access token>
-    ```
-2. Add the following repository in your **settings.gradle.kts** file's `dependencyManagement/repositories` block:
-
-    ```kotlin
-    maven {
-        url = uri("https://maven.pkg.github.com/AppliedRecognition/Ver-ID-Releases-Android")
-        credentials {
-            username = settings.extra["gpr.user"] as String?
-            password = settings.extra["gpr.token"] as String?
-        }
-    }
-    ```
-3. Add the spoof detection library in your module's **build.gradle.kts** file:
-
-    ```kotlin
-    dependencies {
-        implementation(platform("com.appliedrec:ver-id-bom:2025-05-04"))
-        implementation("com.appliedrec:verid3-serialization")
-        implementation("com.appliedrec:spoof-device-detection")
-    }
-    ```
+```kotlin
+dependencies {
+    implementation(platform("com.appliedrec:verid-bom:2025-08-00"))
+    implementation("com.appliedrec:spoof-device-detection-cloud")
+    // For converting Bitmaps to Ver-ID images:
+    implementation("com.appliedrec:verid-serialization")
+}
+```
 
 ## Usage
 
@@ -44,3 +28,7 @@ val image = Image.fromBitmap(bitmap)
 // Detect spoof devices
 val spoofDevices = runBlocking { detectSpoofDevicesInImage(image) }
 ```
+
+## Offline version
+
+The library makes calls to an internet endpoint. If you require offline use please [contact Applied Recognition](mailto:info@appliedrecognition.com).
