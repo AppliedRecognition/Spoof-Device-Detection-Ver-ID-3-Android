@@ -1,5 +1,5 @@
-import org.jetbrains.dokka.gradle.DokkaTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.dokka.gradle.DokkaTaskPartial
 
 plugins {
     alias(libs.plugins.android.library)
@@ -90,7 +90,7 @@ signing {
     sign(publishing.publications)
 }
 
-tasks.withType<DokkaTask>().configureEach {
+tasks.withType<DokkaTaskPartial>().configureEach {
     moduleName.set("Spoof device detection")
     moduleVersion.set(project.version.toString())
 }

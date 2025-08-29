@@ -6,6 +6,13 @@ plugins {
     alias(libs.plugins.dokka)
 }
 
-tasks.named<org.jetbrains.dokka.gradle.DokkaMultiModuleTask>("dokkaHtmlMultiModule") {
-    outputDirectory.set(rootProject.file("docs"))
+dokka {
+    dokkaPublications.html {
+        outputDirectory.set(rootProject.file("docs"))
+    }
+}
+
+dependencies {
+    dokka(project(":spoof-detection-core"))
+    dokka(project(":spoof-device-detection"))
 }
